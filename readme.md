@@ -145,7 +145,3 @@ The project follows a Monorepo structure with **Docker** containerization.
 
 Developed by **Micael** as a Computer Science Undergraduate Thesis at **UFAM**.
 
----
-<p align="center">
-  Made with 💜 and TypeScript
-</p>
