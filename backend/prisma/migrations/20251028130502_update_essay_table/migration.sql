@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `essay` MODIFY `status` ENUM('DRAFT', 'SUBMITTED', 'REVIEWED') NOT NULL;

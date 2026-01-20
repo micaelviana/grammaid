@@ -1,0 +1,151 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  //isso foi para que a generation do prisma funcione tanto no local quanto no docker
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum CriteriaType {
+  CONTENT // Ideias, relevância, completude da resposta
+  ORGANIZATION // Coesão, estrutura, uso de conectores
+  GRAMMAR // Gramática, vocabulário, ortografia e mecânica
+}
+
+enum ErrorType {
+  // --- CONTENT ---
+  CONTENT_OFF_TOPIC // Foge do tema proposto
+  CONTENT_UNDEVELOPED_IDEAS // Ideias fracas ou superficiais
+  CONTENT_LACK_EXAMPLES // Falta de evidências, exemplos ou detalhes
+  CONTENT_INCOHERENT_ARGUMENT // Argumentação inconsistente ou contraditória
+
+  // --- ORGANIZATION ---
+  ORGANIZATION_POOR_TRANSITIONS // Falta ou mau uso de conectores
+  ORGANIZATION_PARAGRAPH_STRUCTURE // Parágrafos mal estruturados
+  ORGANIZATION_LOGICAL_FLOW // Ordem de ideias confusa
+  ORGANIZATION_REPETITION // Repetição desnecessária de ideias
+
+  // --- GRAMMAR ---
+  GRAMMAR_SUBJECT_VERB // Erros de concordância sujeito-verbo
+  GRAMMAR_TENSE // Uso incorreto de tempos verbais
+  GRAMMAR_ARTICLE // Uso incorreto de artigos (a, an, the)
+  GRAMMAR_PREPOSITION // Preposições usadas de forma inadequada
+  GRAMMAR_WORD_CHOICE // Palavra inadequada ou mal escolhida no contexto
+  GRAMMAR_SPELLING // Erros de ortografia
+  GRAMMAR_PUNCTUATION // Pontuação incorreta ou ausente
+}
+
+enum Level {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum EssayStatus {
+  DRAFT
+  SUBMITTED
+  REVIEWED
+}
+
+model User {
+  id         String   @id @default(uuid()) @db.Char(36)
+  name       String
+  email      String   @unique
+  password   String
+  level      Level
+  typeId     Int      @db.TinyInt
+  type       UserType @relation(fields: [typeId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  Essay      Essay[]
+
+  @@map("user")
+}
+
+model Proposal {
+  id        String   @id @default(uuid()) @db.Char(36)
+  title     String   @db.VarChar(100)
+  text      String   @db.Text
+  level     Level
+  minWords  Int // min number of words
+  imageUrl  String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Essay     Essay[]
+
+  @@map("proposal")
+}
+
+model Essay {
+  id         String      @id @default(uuid()) @db.Char(36)
+  userId     String      @db.Char(36)
+  proposalId String      @db.Char(36)
+  text       String      @db.Text
+  status     EssayStatus
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  user       User        @relation(fields: [userId], references: [id])
+  proposal   Proposal    @relation(fields: [proposalId], references: [id])
+  Review     Review[]
+
+  @@map("essay")
+}
+
+model Review {
+  id            String     @id @default(uuid()) @db.Char(36)
+  essayId       String     @db.Char(36)
+  score         Float      @db.Float
+  suggestedText String     @db.Text
+  //esse eh o nome do modelo do llm
+  modelVersion  String     @db.VarChar(100)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  essay         Essay      @relation(fields: [essayId], references: [id])
+  Criteria      Criteria[]
+  Errors        Error[]
+}
+
+model Criteria {
+  id           String       @id @default(uuid()) @db.Char(36)
+  criteriaType CriteriaType
+  score        Float        @db.Float
+  reviewId     String       @db.Char(36)
+  review       Review       @relation(fields: [reviewId], references: [id])
+  Error        Error[]
+
+  @@map("criteria")
+}
+
+model Error {
+  id          String    @id @default(uuid()) @db.Char(36)
+  errorType   ErrorType
+  description String    @db.Text
+  suggestion  String    @db.Text
+  startingPos Int       @db.SmallInt
+  endingPos   Int       @db.SmallInt
+
+  criteriaId String   @db.Char(36)
+  criteria   Criteria @relation(fields: [criteriaId], references: [id])
+  reviewId   String   @db.Char(36)
+  Review     Review   @relation(fields: [reviewId], references: [id])
+
+  @@map("error")
+}
+
+//Esse eh o ultimo
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime
+}
+
+model UserType {
+  id    Int    @id @db.TinyInt()
+  label String @db.Char(8)
+  users User[]
+}
