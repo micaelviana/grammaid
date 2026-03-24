@@ -1,7 +1,7 @@
 <h1 align="center">Grammaid</h1>
 
 <div align="center">
-   <img src="assets/tela%20inicial.png" alt="Grammaid Dashboard" width="800">
+   <img src="screenshots/tela%20inicial.png" alt="Grammaid Dashboard" width="800">
 </div>
 
 <p align="center">
@@ -45,37 +45,37 @@ The platform leverages **Large Language Models (LLMs)** to provide automated, de
 ### 📌 Essay Proposals
 Select from a variety of essay topics tailored to different difficulty levels.
 <div align="center">
-  <img src="assets/proposta%20de%20redacao.png" alt="Essay Proposals" width="700">
+  <img src="screenshots/proposta%20de%20redacao.png" alt="Essay Proposals" width="700">
 </div>
 
 ### 📝 Correction Overview
 Get an overall grade and general feedback on your writing performance.
 <div align="center">
-  <img src="assets/correcao%20geral.png" alt="Correction Overview" width="700">
+  <img src="screenshots/correcao%20geral.png" alt="Correction Overview" width="700">
 </div>
 
 ### 🔍 Detailed Feedback
 Interactive review with specific error annotations and improvement suggestions.
 <div align="center">
-  <img src="assets/feedback%20detalhado.png" alt="Detailed Feedback" width="700">
+  <img src="screenshots/feedback%20detalhado.png" alt="Detailed Feedback" width="700">
 </div>
 
 ### 💡 Text Suggestions
 AI-powered suggestions to rewrite sentences for better clarity and flow.
 <div align="center">
-  <img src="assets/sugestao%20de%20texto.png" alt="Text Suggestions" width="700">
+  <img src="screenshots/sugestao%20de%20texto.png" alt="Text Suggestions" width="700">
 </div>
 
 ### 🚀 User Progression
 Visual tracking of user level advancement (Basic → Intermediate → Advanced).
 <div align="center">
-  <img src="assets/promocao%20de%20usuario.jpg" alt="User Promotion" width="700">
+  <img src="screenshots/promocao%20de%20usuario.jpg" alt="User Promotion" width="700">
 </div>
 
 ### 🤖 AI Workflow (n8n)
 The backend orchestration uses n8n to process texts through LLMs.
 <div align="center">
-  <img src="assets/n8n.png" alt="n8n Workflow" width="700">
+  <img src="screenshots/n8n.png" alt="n8n Workflow" width="700">
 </div>
 
 ## 🛠 Technologies
